@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.0;
 
 contract DNAContract {
     string[] private _accessoriesType = [
@@ -201,34 +201,44 @@ contract DNAContract {
         "ShortHairTheCaesarSidePart"
     ];
 
-    // TODO: Calculate DNA
+    function deterministicPseudoRandomDNA(uint256 _tokenId, address _minter) 
+    public
+    pure
+    returns (uint256)
+     {
+        uint256 combinedParams = _tokenId + uint160(_minter);
+        bytes memory encodedParams = abi.encodePacked(combinedParams);    
+        bytes32 hashedParams = keccak256(encodedParams);
+
+        return uint256(hashedParams);
+    }
 
     // Get attributes
-    uint8 constant ADN_SECTION_SIZE = 2;
+    uint256 constant ADN_SECTION_SIZE = 2;
 
-    function _getDNASection(uint256 _dna, uint8 _rightDiscard)
+    function _getDNASection(uint256 _dna, uint256 _rightDiscard)
         internal
         pure
-        returns (uint8)
+        returns (uint256)
     {
         return
-            uint8(
+            uint256(
                 (_dna % (1 * 10**(_rightDiscard + ADN_SECTION_SIZE))) /
                     (1 * 10**_rightDiscard)
             );
     }
 
-    function _getAccesoriesType(uint8 _dna)
+    function getAccessoriesType(uint256 _dna)
         public
         view
         returns (string memory)
     {
-        uint8 dnaSection = _getDNASection(_dna, 0);
+        uint256 dnaSection = _getDNASection(_dna, 0);
         return _accessoriesType[dnaSection % _accessoriesType.length];
     }
 
-    function _getClotheColor(uint8 _dna) public view returns (string memory) {
-        uint8 dnaSection = _getDNASection(_dna, 2);
+    function getClotheColor(uint256 _dna) public view returns (string memory) {
+        uint256 dnaSection = _getDNASection(_dna, 2);
         return _clotheColor[dnaSection % _clotheColor.length];
     }
 
