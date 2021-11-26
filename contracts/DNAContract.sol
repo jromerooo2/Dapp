@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.7;
 
-contract PlatziPunksDNA {
+contract DNAContract {
     string[] private _accessoriesType = [
         "Blank",
         "Kurt",
