@@ -4,12 +4,14 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/StorageSlot.sol";
 import "./Base64.sol";
 import "./DNAContract.sol";
 import "hardhat/console.sol";
 
 contract MyPunk is ERC721, ERC721Enumerable, DNAContract {
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     Counters.Counter private _idCounter;
     
@@ -78,9 +80,9 @@ contract MyPunk is ERC721, ERC721Enumerable, DNAContract {
         string memory image = imageByDna(dna);
         string memory jsonURI = Base64.encode(
             abi.encodePacked(
-                '{ "name": "PlatziPunks #',
-                _tokenId,
-                '", "description": "Platzi Punks are randomized Avataaars stored on chain to teach DApp development on Platzi", "image": "',
+                '{ "name": "Mypunks #',
+                _tokenId.toString(),
+                '", "description": "My Punks are randomized Avataaars stored on chain to teach DApp development on Romeros office xD", "image": "',
                 image,
                 '"}'
             )
