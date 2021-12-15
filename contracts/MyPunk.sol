@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./Base64.sol";
 import "./DNAContract.sol";
+import "hardhat/console.sol";
 
 contract MyPunk is ERC721, ERC721Enumerable, DNAContract {
     using Counters for Counters.Counter;
@@ -19,12 +20,13 @@ contract MyPunk is ERC721, ERC721Enumerable, DNAContract {
         MaxSupply = _maxSupply;
     }
     
-    function mint() public{
+    function mint() public {
         uint256 current = _idCounter.current();
-        require(current < MaxSupply, "Max supply reached");
-        _safeMint(msg.sender, current);
+        require(current < MaxSupply, "No Punks left :(");
         tokenDNA[current] = deterministicPseudoRandomDNA(current, msg.sender);
+        _safeMint(msg.sender, current); 
         _idCounter.increment();
+
     }
 
     function _baseURI() internal pure override returns (string memory) {

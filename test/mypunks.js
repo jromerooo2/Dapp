@@ -2,10 +2,10 @@ const { expect } = require('chai');
 
 
 describe("MyPunks Contract", () => {
-        const setup = async ({ maxSupply = 10000 }) => {
+        const setup = async ({ MaxSupply = 2 }) => {
         const [owner] = await ethers.getSigners();
         const PlatziPunks = await ethers.getContractFactory("MyPunk");
-        const deployed = await PlatziPunks.deploy(maxSupply);
+        const deployed = await PlatziPunks.deploy(MaxSupply);
     
         return {
             owner,
@@ -15,12 +15,12 @@ describe("MyPunks Contract", () => {
     
         describe("Deployment", () => {
         it("Sets max supply to passed param", async () => {
-            const maxSupply = 4000;
+            const MaxSupply = 4000;
     
-            const { deployed } = await setup({ maxSupply });
+            const { deployed } = await setup({ MaxSupply });
     
             const returnedMaxSupply = await deployed.MaxSupply();
-            expect(maxSupply).to.equal(returnedMaxSupply);
+            expect(MaxSupply).to.equal(returnedMaxSupply);
         });
         });
 
@@ -34,6 +34,18 @@ describe("MyPunks Contract", () => {
                 expect(ownerOfMinted).to.equal(owner.address);
 
             })
-            it("Should")
+            it("Should have a minting limit", async()=>{
+                const MaxSupply = 2;
+
+                const { deployed } = await setup({ MaxSupply });
+          
+                // Mint all
+                await Promise.all([deployed.mint(), deployed.mint()]);
+          
+                // Assert the last minting
+                await expect(deployed.mint()).to.be.revertedWith(
+                  "No Punks left :("
+                );
+              });
         });
 }); 
